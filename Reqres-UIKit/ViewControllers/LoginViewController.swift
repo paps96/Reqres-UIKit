@@ -42,6 +42,15 @@ class LoginViewController: UIViewController, UITextFieldDelegate, UIApplicationD
         
     }
     
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        self.view.bounds.origin.y = 100
+    }
+    
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        self.view.bounds.origin.y = 0
+        return true
+    }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true

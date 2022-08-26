@@ -58,6 +58,15 @@ class NewUserViewController: UIViewController, UITextFieldDelegate, UIApplicatio
         return true
     }
     
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        self.view.bounds.origin.y = 100
+    }
+    
+    func textFieldShouldEndEditing(_ textField: UITextField) -> Bool {
+        self.view.bounds.origin.y = 0
+        return true
+    }
+    
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         let oldText = textField.text!

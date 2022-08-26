@@ -16,7 +16,7 @@ final class AuthManager {
     
     var isSignedIn: Bool {
         var sign: Bool {
-            guard accesToken != nil && accesToken != "" else { return false }
+            guard accesToken != nil &&  accesToken != "" else { return false }
             return true
         }
         
@@ -25,7 +25,7 @@ final class AuthManager {
     
     var succesfulRegistry: Bool {
         var sign: Bool {
-            guard temporalToken != nil && temporalToken != "" else { return false }
+            guard temporalToken != nil || temporalToken != "" else { return false }
             return true
         }
         return sign
@@ -53,7 +53,7 @@ final class AuthManager {
     }
     
     public func deleteToken() {
-        UserDefaults.standard.setValue("", forKey: "acces_token")
+        UserDefaults.standard.setValue(nil, forKey: "acces_token")
     }
     
     

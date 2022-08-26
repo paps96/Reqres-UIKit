@@ -17,6 +17,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         
         if !AuthManager.shared.isSignedIn {
+            
             let storyboard = UIStoryboard(name: "Main", bundle: nil)
             let rootVC = storyboard.instantiateViewController(identifier: "LoginPage")
             let window = UINavigationController(rootViewController: rootVC)

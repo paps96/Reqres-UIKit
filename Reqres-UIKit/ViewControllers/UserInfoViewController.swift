@@ -39,7 +39,7 @@ class UserInfoViewController: UIViewController {
         FirstNameLabel.text = actualUser.first_name
         LastNameLabel.text = actualUser.last_name
         EmailLabel.text = actualUser.email
-        IDLabel.text = "ID : \(String(describing: userAboutID))"
+        IDLabel.text = "ID : \(userAboutID!)"
     }
     
     override func viewDidLoad() {

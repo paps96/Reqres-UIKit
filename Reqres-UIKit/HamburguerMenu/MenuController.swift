@@ -26,7 +26,9 @@ class MenuController: UIViewController, UIApplicationDelegate {
     
     
     @IBAction func logOut() {
-        AuthManager.shared.deleteToken()
+        AuthManager.shared.setAccesToken("")
+        print(AuthManager.shared.isSignedIn)
+        
     }
     
 

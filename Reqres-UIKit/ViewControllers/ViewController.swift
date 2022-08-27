@@ -16,24 +16,30 @@ class ViewController: UITableViewController {
     var persons: [onlineUsers] = []
     var copyPersons: [onlineUsers] = []
     
+    
     //MARK: Init View
     
     override func viewWillAppear(_ animated: Bool) {
         
-        guard webUtils.shared.isLoadedUsers else {
-            webUtils.shared.fetchData()
-            persons.append(contentsOf: webUtils.users)
-            copyPersons.append(contentsOf: persons)
-            return
+        
+        if webUtils.usersWI.isEmpty {
+            webUtils.shared.fetchDataWithoutImages()
         }
+        
+        list.append(contentsOf: webUtils.usersWI)
+        
+        //guard webUtils.shared.isLoadedUsers else {
+            //webUtils.shared.fetchData()
+            //persons.append(contentsOf: webUtils.users)
+            //copyPersons.append(contentsOf: persons)
+        //    return
+        //}
         
         navigationController!.navigationBar.prefersLargeTitles = true
         navigationItem.hidesBackButton = true
         navigationController!.navigationBar.isHidden = false
         
-        
         persons.append(contentsOf: webUtils.users)
-        
         
     }
     
@@ -74,17 +80,17 @@ class ViewController: UITableViewController {
     //MARK: Table Properties
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return persons.count
+        return list.count//persons.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCell(withIdentifier: "ProtoTableViewCell", for: indexPath) as! ProtoTableViewCell
         
-        let checklist = persons[indexPath.row]
+        let checklist = list[indexPath.row]
         cell.NameCell.text = checklist.first_name
         cell.LastNameCell.text = checklist.last_name
         cell.EmailCell.text = checklist.email
-        cell.ImageCell.image = checklist.avatarImage
+        cell.ImageCell.imageFromServerURL(checklist.avatar ?? "", placeHolder: UIImage(systemName: "person"))
         return cell
     }
 
@@ -93,17 +99,13 @@ class ViewController: UITableViewController {
         
         let controller = storyboard!.instantiateViewController(withIdentifier: "UserInfoViewController") as! UserInfoViewController
         
-        let checklist = persons[indexPath.row].id
+        let checklist = list[indexPath.row].id
         controller.userAboutID = checklist
         navigationController?.pushViewController(
             controller, animated: true)
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
-    
-    
-    
-    
     
 }
 

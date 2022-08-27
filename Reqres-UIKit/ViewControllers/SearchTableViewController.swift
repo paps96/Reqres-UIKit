@@ -13,7 +13,7 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate {
     
     @IBOutlet weak var searchNavigationBar: UINavigationItem!
     
-    var allUsers = webUtils.users
+    var allUsers = webUtils.usersWI.convertIntoOnlineUser()
     var userBackup = [user]()
     var copyUsers = [onlineUsers]()
     var recents = CoreDataManager.shared.searchedFinal.convertIntoOnlineUser()

@@ -48,6 +48,7 @@ struct onlineUsers {
 class webUtils {
     
     static var users: [onlineUsers] = []
+    static var usersWI: [user] = []
     
     var isLoadedUsers: Bool {
         return !webUtils.users.isEmpty
@@ -194,6 +195,36 @@ class webUtils {
         
     }
     
+    
+    func fetchDataWithoutImages() {
+        
+        guard let url = URL(string: "https://reqres.in/api/users") else { return }
+        let semaphore = DispatchSemaphore(value: 0)
+        
+        let task = URLSession.shared.dataTask(with: url, completionHandler: { data, _, error in
+          
+            guard let data = data, error == nil else { return }
+            
+            do {
+                let information = try JSONDecoder().decode(page.self, from: data)
+                let users = information.data
+                self.allUsers = users
+                
+                webUtils.usersWI.append(contentsOf: self.allUsers)
+                
+            }
+            catch {
+                print(error)
+            }
+            
+            semaphore.signal()
+        })
+        
+        task.resume()
+        semaphore.wait()
+        
+        
+    }
     
     
     

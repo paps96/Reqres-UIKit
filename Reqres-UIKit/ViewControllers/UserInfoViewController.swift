@@ -22,24 +22,12 @@ class UserInfoViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
     
         actualUser = webUtils.shared.fetchUser(userAboutID)
-        
-        guard let url = URL(string: actualUser.avatar!) else {
-            let image = UIImage(systemName: "person")
-            ProfileImage.image = image
-            FirstNameLabel.text = actualUser.first_name
-            LastNameLabel.text = actualUser.last_name
-            EmailLabel.text = actualUser.email
-            IDLabel.text = "ID : \(String(describing: userAboutID))"
-            return
-        }
-        
-        let data = try? Data(contentsOf: url)
-        let image = UIImage(data: data!)
-        ProfileImage.image = image
+        ProfileImage.imageFromServerURL(actualUser.avatar ?? "", placeHolder: UIImage(systemName: "person"))
         FirstNameLabel.text = actualUser.first_name
         LastNameLabel.text = actualUser.last_name
         EmailLabel.text = actualUser.email
         IDLabel.text = "ID : \(userAboutID!)"
+        
     }
     
     override func viewDidLoad() {

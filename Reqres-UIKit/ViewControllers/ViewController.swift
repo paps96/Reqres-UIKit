@@ -11,35 +11,24 @@ import SideMenu
 class ViewController: UITableViewController {
     
     var menu: SideMenuNavigationController?
-    
     var list: [user] = []
-    var persons: [onlineUsers] = []
-    var copyPersons: [onlineUsers] = []
-    
     
     //MARK: Init View
     
     override func viewWillAppear(_ animated: Bool) {
         
-        
-        if webUtils.usersWI.isEmpty {
-            webUtils.shared.fetchDataWithoutImages()
-        }
-        
-        list.append(contentsOf: webUtils.usersWI)
-        
-        //guard webUtils.shared.isLoadedUsers else {
-            //webUtils.shared.fetchData()
-            //persons.append(contentsOf: webUtils.users)
-            //copyPersons.append(contentsOf: persons)
-        //    return
-        //}
-        
         navigationController!.navigationBar.prefersLargeTitles = true
         navigationItem.hidesBackButton = true
         navigationController!.navigationBar.isHidden = false
         
-        persons.append(contentsOf: webUtils.users)
+        let check = webUtils.shared.fetchDataWithoutImages()
+        print(check)
+        
+        if check {
+            list.append(contentsOf: webUtils.usersWI)
+        } else {
+            list.append(user(id: 1000, email: "", first_name: "No se han encontrado usuarios", last_name: "", avatar: ""))
+        }
         
     }
     
@@ -80,7 +69,7 @@ class ViewController: UITableViewController {
     //MARK: Table Properties
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return list.count//persons.count
+        return list.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

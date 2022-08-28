@@ -124,8 +124,12 @@ class webUtils {
     
     
     /// Función correspondiente a una solicitud "GET" funciona para obtener la lista de usuarios de la página 1
-    func fetchData() {
-        guard let url = URL(string: "https://reqres.in/api/users") else { return }
+    func fetchData() -> Bool {
+        
+        var webStatus = false
+        
+        guard let url = URL(string: "https://reqres.in/api/users") else { return webStatus }
+        
         let semaphore = DispatchSemaphore(value: 0)
         
         let task = URLSession.shared.dataTask(with: url, completionHandler: { data, _, error in
@@ -149,9 +153,12 @@ class webUtils {
                     webUtils.users.append(us)
                 }
                 
+                webStatus = true
+                
             }
             catch {
                 print(error)
+                webStatus = false
             }
             
             semaphore.signal()
@@ -159,6 +166,8 @@ class webUtils {
         
         task.resume()
         semaphore.wait()
+        
+        return webStatus
         
     }
     
@@ -196,9 +205,11 @@ class webUtils {
     }
     
     
-    func fetchDataWithoutImages() {
+    func fetchDataWithoutImages() -> Bool {
         
-        guard let url = URL(string: "https://reqres.in/api/users") else { return }
+        var webStatus = false
+        
+        guard let url = URL(string: "https://reqres.in/api/users") else { return webStatus }
         let semaphore = DispatchSemaphore(value: 0)
         
         let task = URLSession.shared.dataTask(with: url, completionHandler: { data, _, error in
@@ -211,6 +222,7 @@ class webUtils {
                 self.allUsers = users
                 
                 webUtils.usersWI.append(contentsOf: self.allUsers)
+                webStatus = true
                 
             }
             catch {
@@ -223,7 +235,7 @@ class webUtils {
         task.resume()
         semaphore.wait()
         
-        
+        return webStatus
     }
     
     

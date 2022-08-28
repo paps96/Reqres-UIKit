@@ -15,8 +15,8 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate {
     
     var allUsers = webUtils.usersWI.convertIntoOnlineUser()
     var userBackup = [user]()
-    var copyUsers = [onlineUsers]()
-    var recents = CoreDataManager.shared.searchedFinal.convertIntoOnlineUser()
+    var copyUsers = CoreDataManager.shared.searchedFinal.convertIntoOnlineUser()
+    var recents = [onlineUsers]()
     var tableTitle = "Recientes"
     
     lazy var searchBar:UISearchBar = UISearchBar(frame: CGRect(x: 0, y: 0, width: 250, height: 20))
@@ -24,8 +24,8 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate {
     //MARK: Init View
     
     override func viewWillAppear(_ animated: Bool) {
+        recents = copyUsers
         searchBar.becomeFirstResponder()
-        copyUsers = CoreDataManager.shared.searchedFinal.convertIntoOnlineUser()
     }
 
     override func viewDidLoad() {
@@ -98,7 +98,7 @@ class SearchTableViewController: UITableViewController, UISearchBarDelegate {
     
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         
-        let filterUsers = allUsers.filter { person in
+        let filterUsers = copyUsers.filter { person in
             return (person.first_name.contains(searchText) || person.last_name.contains(searchText) || person.email.contains(searchText))
         }
         

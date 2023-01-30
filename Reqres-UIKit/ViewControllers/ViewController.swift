@@ -12,29 +12,40 @@ class ViewController: UITableViewController {
     
     var menu: SideMenuNavigationController?
     var list: [user] = []
+    let webManager = webUtils.shared
     
     //MARK: Init View
     
     override func viewWillAppear(_ animated: Bool) {
-        
         navigationController!.navigationBar.prefersLargeTitles = true
         navigationItem.hidesBackButton = true
         navigationController!.navigationBar.isHidden = false
-        
-        let check = webUtils.shared.fetchDataWithoutImages()
-        print(check)
-        
-        if check {
-            list.append(contentsOf: webUtils.usersWI)
-        } else {
-            list.append(user(id: 1000, email: "", first_name: "No se han encontrado usuarios", last_name: "", avatar: ""))
+        self.getUsers(completion: {
+            availableUser in
+            do {
+                self.list = try availableUser.get()
+                self.tableView.reloadData()
+                print("Number of items \(self.list.count) data")
+            } catch {
+                print("cannot fetch data: \(error)")
+            }
+        })
+    }
+    
+    func getUsers(completion: @escaping (Result<[user], Error>) -> Void) {
+        Task {
+            do {
+                let result = try await webManager.fetchDataUsers()
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
         }
-        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+    
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let rootVC = storyboard.instantiateViewController(identifier: "Hamburguer")
         
@@ -51,7 +62,6 @@ class ViewController: UITableViewController {
         navigationController!.navigationBar.prefersLargeTitles = true
         navigationItem.hidesBackButton = true
         navigationController!.navigationBar.isHidden = false
-        
         
     }
     
@@ -74,7 +84,6 @@ class ViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = self.tableView.dequeueReusableCell(withIdentifier: "ProtoTableViewCell", for: indexPath) as! ProtoTableViewCell
-        
         let checklist = list[indexPath.row]
         cell.NameCell.text = checklist.first_name
         cell.LastNameCell.text = checklist.last_name
@@ -87,11 +96,9 @@ class ViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let controller = storyboard!.instantiateViewController(withIdentifier: "UserInfoViewController") as! UserInfoViewController
-        
         let checklist = list[indexPath.row].id
         controller.userAboutID = checklist
-        navigationController?.pushViewController(
-            controller, animated: true)
+        navigationController?.pushViewController(controller, animated: true)
         
         tableView.deselectRow(at: indexPath, animated: true)
     }

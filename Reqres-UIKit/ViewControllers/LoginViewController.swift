@@ -69,35 +69,36 @@ class LoginViewController: UIViewController, UITextFieldDelegate, UIApplicationD
         return true
     }
     
-    func login() {
-        
+    func executeLogin() {
         webUtils.shared.logSignIn(usernameOrEmail: emailTextField.text ?? "", userPassword: PasswordTextField.text ?? "", login: true, completion: { data in
             guard data.token != nil else {
-                print(data.error!)
-                return}
-            
+                self.showMessage(message: "error")
+                print(data.error!); return}
             AuthManager.shared.setAccesToken(data.token!)
+            DispatchQueue.main.sync {
+                self.showNextScreen()
+            }
             print(data.token!)
         })
         
     }
     
-    
-    
-    @IBAction func loginTouch() {
-        login()
-        if !AuthManager.shared.isSignedIn {
-            showMessage(message: "error")
-        } else if AuthManager.shared.isSignedIn && isPresented == nil {
+    func showNextScreen() {
+        if AuthManager.shared.isSignedIn && self.isPresented == nil {
             let controller = storyboard!.instantiateViewController(withIdentifier: "tableView") as! ViewController
             controller.navigationController?.navigationBar.prefersLargeTitles = true
             navigationController?.pushViewController(
                 controller, animated: true)
-            
-        } else if AuthManager.shared.isSignedIn && isPresented != nil {
+        } else if AuthManager.shared.isSignedIn && self.isPresented != nil {
             self.navigationController?.popViewController(animated: true)
             print("I can do that")
         }
+    }
+    
+    
+    
+    @IBAction func loginTouch() {
+        self.executeLogin()
     }
     
     func showMessage(message: String) {
